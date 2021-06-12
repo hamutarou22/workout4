@@ -80,7 +80,7 @@ import dj_database_url
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': d3dbvicvqrq83c',
+        'NAME': 'd3dbvicvqrq83c',
         'USER': 'scdkpejpgtnlij',
         'PASSWORD': '4e54d969fd379494d9753390bb287bed151d0bd9d63ab54801c8f1a94ec8959e',
         'HOST': 'ec2-54-145-224-156.compute-1.amazonaws.com',
