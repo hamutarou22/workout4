@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-rj*jtk38*-p_ql3x*zeo^x(wt984wg1(2xdmki5!90#u3mu+^9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["workoutakira.herokuapp.com"]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -74,13 +75,21 @@ WSGI_APPLICATION = 'workout.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+import dj_database_url
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': d3dbvicvqrq83c',
+        'USER': 'scdkpejpgtnlij',
+        'PASSWORD': '4e54d969fd379494d9753390bb287bed151d0bd9d63ab54801c8f1a94ec8959e',
+        'HOST': 'ec2-54-145-224-156.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
+db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -137,3 +146,4 @@ except ImportError:
 if not DEBUG:
     import django_heroku
     django_heroku.settings(locals())
+    SECRET_KEY = os.environ['SECRET_KEY']
