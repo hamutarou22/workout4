@@ -37,7 +37,7 @@ def loginfunc(request):
             return redirect('index')
         else:
             return render(request, 'login.html', {'error':'not loggedin'})
-    return render(request, 'login.html', {'error':'GET'})
+    return render(request, 'login.html', {})
 
 @login_required
 def index(request):
@@ -86,6 +86,7 @@ def recordfunc(request):
     object_list = Event.objects.all
     return render(request, 'record.html', {'object_list':object_list})
 
+@login_required
 def changefunc(request):
     response = "Hello, world. You're at the change."
     return HttpResponse(response)
