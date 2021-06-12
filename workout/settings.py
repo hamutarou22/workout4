@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-rj*jtk38*-p_ql3x*zeo^x(wt984wg1(2xdmki5!90#u3mu+^9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 try:
     from .local_settings import *
@@ -130,24 +130,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 
 
-if not DEBUG:
-    import django_heroku
-    django_heroku.settings(locals())
-    SECRET_KEY = os.environ['SECRET_KEY']
 
-    import dj_database_url
+import django_heroku
+django_heroku.settings(locals())
+SECRET_KEY = os.environ['SECRET_KEY']
 
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'd3dbvicvqrq83c',
-            'USER': 'scdkpejpgtnlij',
-            'PASSWORD': '4e54d969fd379494d9753390bb287bed151d0bd9d63ab54801c8f1a94ec8959e',
-            'HOST': 'ec2-54-145-224-156.compute-1.amazonaws.com',
-            'PORT': '5432',
+import dj_database_url
+
+DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql_psycopg2',
+                'NAME': 'd3dbvicvqrq83c',
+                'USER': 'scdkpejpgtnlij',
+                'PASSWORD': '4e54d969fd379494d9753390bb287bed151d0bd9d63ab54801c8f1a94ec8959e',
+                'HOST': 'ec2-54-145-224-156.compute-1.amazonaws.com',
+                'PORT': '5432',
+            }
         }
-    }
 
-    db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
-    DATABASES['default'].update(db_from_env)
-
+db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
+DATABASES['default'].update(db_from_env)        
+        
