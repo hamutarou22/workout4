@@ -28,7 +28,7 @@
     {% for item in object_list %}
     <div class="alert alert-success" role="alert">
         <p>タイトル:{{ item.event }}</p>
-        <p>日時: {{ item.training_date }}</p>
+        <p>日時: {{ item.training_date |date:"m/d/y H:i" }}</p>
         <p>重量: {{ item.weight }} kg</p>
         <p>セット数: {{ item.set_number }}</p>
         
