@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+  {% block title %}
+    index
+  {% endblock title %}
+
+  {% block header %}
+  
+  <div class="container">
+    <div class="bg-light p-3 p-sm-5 my-4 rounded">
+      <h1 class="display-4">workout index</h1>
+      <p class="lead">筋トレ、頑張ろう！</p>
+      <hr class="my-4">
+      <a class="btn btn-success btn-lg" href="{% url 'newevent' %}" role="button">種目の追加</a>
+      <a class="btn btn-primary btn-lg" href="{% url 'record' %}" role="button">記録</a>
+      <a class="btn btn-info btn-lg" href="{% url 'table' %}" role="button">表の作成</a>
+      <div class="row align-items-center">
+    </div>
+
+  </div>
+
+  {% endblock header %}
+
+  {% block content %}
+  <div class="container">
+    <p>直近の筋トレメニュー</p>
+    <a class="btn btn-link" href="{% url 'logout' %}" role="button">logout</a>
+    {% for item in object_list %}
+    <div class="alert alert-success" role="alert">
+        <p>タイトル:{{ item.event }}</p>
+        <p>日時: {{ item.training_date }}</p>
+        <p>重量: {{ item.weight }} kg</p>
+        <p>セット数: {{ item.set_number }}</p>
+        
+
+        <form method="POST" action="{% url 'index' %}" enctype="multipart/form-data">
+        <input type="hidden" name="delete_pk" value="{{ item.id }}">
+        <input type="hidden" name="input" value="1">
+        {% csrf_token %}
+        <div class="col-12">
+          <button class="btn btn-danger" type="submit">削除</button>
+        </div>
+        </form>
+    </div>
+    {% endfor %}
+  </div>
+  {% endblock content %}

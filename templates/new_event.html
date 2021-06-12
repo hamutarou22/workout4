@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    add event
+{% endblock title %}
+
+{% block header %}
+<div class="alert alert-success" role="alert">
+    <h1>New Event</h1>
+    <p>Add new traning event!</p>
+  </div>
+{% endblock header %}
+
+{% block content %}
+<div class="container-sm">
+    
+    <div>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">種目名</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for item in object_list %}
+                <tr>
+                    <td>{{ item.event_name }}</td>
+                    <td>
+                        <form method="POST" enctype="multipart/form-data" action= "{% url 'newevent2' %}">{% csrf_token %}
+                            <input type="hidden" name="delete_pk" value="{{ item.pk }}">
+                            <input type="hidden" name="delete" value="1">
+                            <input class="btn btn-primary" type="submit" value="削除">
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %} 
+            </tbody>    
+        </table>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" action= "{% url 'newevent2' %}">{% csrf_token %}
+
+        <div class="input-group input-group-sm mb-3">
+            <input type="hidden" name="add" value="1">
+            <span class="input-group-text" id="inputGroup-sizing-sm">追加する種目名</span>
+            <input type="text" class="form-control" name="newevent"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+        </div>
+
+        <input type="submit" value="add">
+    </form>
+
+    <a class="btn btn-link" href="{% url 'index' %}" role="button">戻る</a>
+    
+
+     
+  </div>
+{% endblock content %}

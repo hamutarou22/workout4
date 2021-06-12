@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+  {% block title %}
+    record
+  {% endblock title %}
+
+
+  {% block header %}
+  <div class="alert alert-success" role="alert">
+    <p>record today training</p>
+  </div>
+  {% endblock header %}
+
+  {% block content %}
+  <div class="container-sm">
+
+    <form method="POST" enctype="multipart/form-data" action= "{% url 'record' %}">{% csrf_token %}
+
+        <select name="Event2" class="form-select" aria-label="Default select example">
+            <option selected>Open this select menu</option>
+            {% for item in object_list %}
+            <option value="{{ item.event_name }}">{{ item.event_name }}</option>
+            {% endfor %}
+        </select>
+
+        <div class="input-group input-group-sm mb-3">
+            <input type="hidden" name="input" value="1">
+            <span class="input-group-text" id="inputGroup-sizing-sm">重量</span>
+            <input type="int" class="form-control" name="weight"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+            <span class="input-group-text" id="inputGroup-sizing-sm">セット数</span>
+            <input type="int" class="form-control" name="setnumber2" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+        </div>
+
+        <input type="submit" value="create">
+    </form>
+    <a class="btn btn-link" href="{% url 'index' %}" role="button">戻る</a>
+  </div>
+  
+   
+  {% endblock content %}

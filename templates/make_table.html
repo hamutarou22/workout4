@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+  {% block title %}
+    Table
+  {% endblock title %}
+
+
+  {% block header %}
+  <div class="alert alert-success" role="alert">
+    <p>Choose number of record and event to display your training result!</p>
+  </div>
+  {% endblock header %}
+
+  {% block content %}
+  <div class="container-sm">
+
+    <form method="POST" enctype="multipart/form-data" action= "{% url 'table' %}">{% csrf_token %}
+        <select name="Event2" class="form-select" aria-label="Default select example">
+            <option selected>Open this select menu</option>
+            {% for item in event_list %}
+            <option value="{{ item.event_name }}">{{ item.event_name }}</option>
+            {% endfor %}
+        </select>
+
+        <div class="input-group input-group-sm mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-sm">表示するレコード数</span>
+            <input type="int" class="form-control" name="number_record"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+            <input type="hidden" name="input" value="1">
+        </div>
+        <input type="submit" value="create">
+    </form>
+
+    {% if input2 == "2" %}
+    <div>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">種目名</th>
+                <th scope="col">重量</th>
+                <th scope="col">セット数</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for item in result_list %}
+                <tr>
+                    <th scope="row">{{ item.training_date }}</th>
+                    <td>{{ item.event }}</td>
+                    <td>{{ item.weight }}</td>
+                    <td>{{ item.set_number }}</td>
+                </tr>
+                {% endfor %} 
+            </tbody>    
+        </table>
+    </div>
+    {% endif %}
+
+    <a class="btn btn-link" href="{% url 'index' %}" role="button">戻る</a>
+  </div>
+  
+   
+  {% endblock content %}
