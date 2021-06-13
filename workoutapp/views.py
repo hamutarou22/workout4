@@ -12,6 +12,9 @@ from django.contrib.auth import logout
 
 # Create your views here.
 
+def first(request):
+    return render(request, 'first.html', {})
+
 def signupfunc(request):
 
     if  request.method == "POST":
@@ -19,7 +22,7 @@ def signupfunc(request):
         password = request.POST['password']
         try:
             user = User.objects.create_user(username, '', password)
-            return render(request, 'signup.html', {})
+            return redirect('index')
         except IntegrityError:
             return render(request, 'signup.html', {'error':'このユーザーは既に登録されています'})
 
@@ -46,31 +49,32 @@ def index(request):
        a = request.POST.get("delete_pk")
        print(a)
        object_list = Content.objects.filter(id = request.POST.get("delete_pk")).delete()
-       object_list = Content.objects.order_by('-training_date')[:10]
+       object_list = Content.objects.filter(username = request.user.username).order_by('-training_date')[:10]
        return render(request, 'index.html', {'object_list':object_list})
 
-
-    object_list = Content.objects.order_by('-training_date')[:10]
+    username = request.user.username
+    print(username)
+    object_list = Content.objects.filter(username = request.user.username).order_by('-training_date')[:10]
     return render(request, 'index.html', {'object_list':object_list})
 
 @login_required
 def neweventfunc(request):
-    object_list = Event.objects.all
+    object_list = Event.objects.filter(username = request.user.username)
     return render(request, 'new_event.html', {'object_list':object_list})
 
 @login_required
 def neweventfunc2(request):
+
     if request.POST.get("add")=="1":
         event = request.POST.get("newevent")
-        b = Event(event_name = event)
+        b = Event(event_name = event, username = request.user.username)
         b.save()
     
     if request.POST.get("delete")=="1":
        instance =  Event.objects.get(id=request.POST.get("delete_pk"))
        instance.delete()
     
-    object_list = Event.objects.all
-    return render(request, 'new_event.html', {'object_list':object_list})
+    return redirect('newevent')
 
 @login_required
 def recordfunc(request):
@@ -78,10 +82,11 @@ def recordfunc(request):
         event1 = request.POST.get("Event2")
         weight1 = request.POST.get("weight")
         setnumber1 = request.POST.get("setnumber2")
-        b = Content(event=event1, weight=weight1, set_number=setnumber1)
+        username = request.user.username
+        b = Content(event=event1, weight=weight1, set_number=setnumber1, username=username)
         b.save()
         object_list = Content.objects.order_by('-training_date')
-        return render(request, 'index.html', {'object_list':object_list})
+        return redirect('index')
 
     object_list = Event.objects.all
     return render(request, 'record.html', {'object_list':object_list})
@@ -104,8 +109,8 @@ def tablefunc(request):
 
     else:
         input2 = "1"
-        result_list = Content.objects.order_by('-training_date')
-        event_list = Event.objects.all
+        result_list = Content.objects.filter(username = request.user.username).order_by('-training_date')
+        event_list = Event.objects.filter(username = request.user.username)
         return render(request, 'make_table.html', {'result_list':result_list, 'event_list':event_list ,"input2":input2 })
 
 def logoutfunc(request):

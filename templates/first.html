@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+  {% block title %}
+    First
+  {% endblock title %}
+
+
+  {% block header %}
+  {% endblock header %}
+
+  {% block customcss %}
+  {% endblock customcss %}
+
+  {% block content %}
+  <div class="container">
+    <div class="bg-light p-3 p-sm-5 my-4 rounded">
+      <h1 class="display-4">自作筋トレ用メモアプリ</h1>
+      <p class="lead">種目を設定することで、その種目について重量やセット数を記録できます。</p>
+      <hr class="my-4">
+      <p>下のボタンよりアクセス！　まずはアカウント登録から</p>
+      <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">自作アプリへ</a>
+    </div>
+  </div>
+   
+  {% endblock content %}
