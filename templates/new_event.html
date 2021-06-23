@@ -4,6 +4,8 @@
     add event
 {% endblock title %}
 
+{% load static %}
+
 {% block header %}
 <div class="alert alert-success" role="alert">
     <h1>New Event</h1>
@@ -11,8 +13,12 @@
   </div>
 {% endblock header %}
 
+{% block customcss %}
+<link href="{% static 'record.css' %}" rel="stylesheet">
+{% endblock customcss %}
+
 {% block content %}
-<div class="container-sm">
+<div class="container">
     
     <div>
         <table class="table">
@@ -39,20 +45,29 @@
         </table>
     </div>
 
-    <form method="POST" enctype="multipart/form-data" action= "{% url 'newevent2' %}">{% csrf_token %}
+    <form method="POST" enctype="multipart/form-data" action= "{% url 'newevent2' %}" class="row g-3 needs-validation" novalidate>{% csrf_token %}
 
         <div class="input-group input-group-sm mb-3">
             <input type="hidden" name="add" value="1">
             <span class="input-group-text" id="inputGroup-sizing-sm">追加する種目名</span>
-            <input type="text" class="form-control" name="newevent"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+            <input type="text" maxlength="30"class="form-control" name="newevent" required aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+            <div class="invalid-feedback">
+                種目を入力してください
+            </div>
         </div>
 
-        <input type="submit" value="add">
+        {{ inputerror }}
+
+        <div class="col-12">
+            <input type="submit" value="add">
+        </div>
     </form>
 
     <a class="btn btn-link" href="{% url 'index' %}" role="button">戻る</a>
     
-
-     
   </div>
+
+  <script type="text/javascript" src="{% static 'record.js' %}"></script>
+
+
 {% endblock content %}

@@ -9,6 +9,8 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 # Create your views here.
 
@@ -67,8 +69,18 @@ def neweventfunc2(request):
 
     if request.POST.get("add")=="1":
         event = request.POST.get("newevent")
-        b = Event(event_name = event, username = request.user.username)
-        b.save()
+        object_list = Content.objects.filter(username = request.user.username)
+
+        if object_list.filter(event = event) == None:
+            b = Event(event = event, username = request.user.username)
+            b.save()
+        else:
+            object_list2 = Event.objects.filter(username = request.user.username)
+            return render(request, 'new_event.html', {'object_list':object_list2, "inputerror":"入力された種目が重複しています。"})
+
+
+
+
     
     if request.POST.get("delete")=="1":
        instance =  Event.objects.get(id=request.POST.get("delete_pk"))
@@ -82,13 +94,22 @@ def recordfunc(request):
         event1 = request.POST.get("Event2")
         weight1 = request.POST.get("weight")
         setnumber1 = request.POST.get("setnumber2")
-        username = request.user.username
-        b = Content(event=event1, weight=weight1, set_number=setnumber1, username=username)
-        b.save()
-        object_list = Content.objects.order_by('-training_date')
-        return redirect('index')
 
-    object_list = Event.objects.all
+        if int(weight1) >= 0 and int(setnumber1) > 0:
+            username = request.user.username
+            b = Content(event=event1, weight=weight1, set_number=setnumber1, username=username)
+            b.save()
+            object_list = Content.objects.order_by('-training_date')
+            return redirect('index')
+        else:
+            if int(weight1) < 0:
+                object_list = Event.objects.filter(username = request.user.username)
+                return render(request, 'record.html', {'object_list':object_list, "inputerror":"重量の入力された値が0以下です。"})
+            else:
+                object_list = Event.objects.filter(username = request.user.username)
+                return render(request, 'record.html', {'object_list':object_list, "inputerror":"セット数の入力された値が0未満です"})
+       
+    object_list = Event.objects.filter(username = request.user.username)
     return render(request, 'record.html', {'object_list':object_list})
 
 @login_required
@@ -116,3 +137,10 @@ def tablefunc(request):
 def logoutfunc(request):
     logout(request)
     return redirect('login')
+
+def validate_int(value, request):
+        ValidationError = {'value': value}
+        print(1223)
+        return render(request, 'error.html', ValidationError)
+
+ 

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
   {% block title %}
     Table
@@ -11,23 +12,36 @@
   </div>
   {% endblock header %}
 
-  {% block content %}
-  <div class="container-sm">
+  {% block customcss %}
+  <link href="{% static 'record.css' %}" rel="stylesheet">
+  {% endblock customcss %}
 
-    <form method="POST" enctype="multipart/form-data" action= "{% url 'table' %}">{% csrf_token %}
-        <select name="Event2" class="form-select" aria-label="Default select example">
-            <option selected>Open this select menu</option>
+
+  {% block content %}
+  <div class="container">
+
+    <form method="POST" enctype="multipart/form-data" action= "{% url 'table' %}" class="row g-3 needs-validation" novalidate>{% csrf_token %}
+        <select name="Event2" class="form-select"　aria-label="Default select example" required>
+            <option selected></option>
             {% for item in event_list %}
             <option value="{{ item.event_name }}">{{ item.event_name }}</option>
             {% endfor %}
+            <div class="invalid-feedback">
+              表示したい種目を選択してください。
+            </div>
         </select>
 
         <div class="input-group input-group-sm mb-3">
             <span class="input-group-text" id="inputGroup-sizing-sm">表示するレコード数</span>
-            <input type="int" class="form-control" name="number_record"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+            <input type="number" class="form-control" min="1" max="20" name="number_record" required aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+            <div class="invalid-feedback">
+              1から20までの値を入力してください。
+            </div>
             <input type="hidden" name="input" value="1">
         </div>
-        <input type="submit" value="create">
+        <div class="col-12">
+          <input type="submit" value="create">
+      </div>
     </form>
 
     {% if input2 == "2" %}
@@ -58,5 +72,6 @@
     <a class="btn btn-link" href="{% url 'index' %}" role="button">戻る</a>
   </div>
   
+  <script type="text/javascript" src="{% static 'record.js' %}"></script>
    
   {% endblock content %}

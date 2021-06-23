@@ -22,15 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-rj*jtk38*-p_ql3x*zeo^x(wt984wg1(2xdmki5!90#u3mu+^9'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-try:
-    from .local_settings import *
-except ImportError:
-    pass
 
 ALLOWED_HOSTS = ['*']
 
@@ -124,6 +119,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_DIRS = [str(BASE_DIR / 'static')]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -131,26 +130,30 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login'
 
+try:
+    from .local_settings import *
+except ImportError:
+    pass
 
 
-
-import django_heroku
-django_heroku.settings(locals())
 SECRET_KEY = os.environ['SECRET_KEY']
 
-import dj_database_url
+if not DEBUG:
+    import dj_database_url
 
-DATABASES = {
-                'default': {
-                    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                    'NAME': 'd3dbvicvqrq83c',
-                    'USER': 'scdkpejpgtnlij',
-                    'PASSWORD': '4e54d969fd379494d9753390bb287bed151d0bd9d63ab54801c8f1a94ec8959e',
-                    'HOST': 'ec2-54-145-224-156.compute-1.amazonaws.com',
-                    'PORT': '5432',
+    DATABASES = {
+                    'default': {
+                        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+                        'NAME': 'd3dbvicvqrq83c',
+                        'USER': 'scdkpejpgtnlij',
+                        'PASSWORD': '4e54d969fd379494d9753390bb287bed151d0bd9d63ab54801c8f1a94ec8959e',
+                        'HOST': 'ec2-54-145-224-156.compute-1.amazonaws.com',
+                        'PORT': '5432',
+                    }
                 }
-            }
 
-db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
-DATABASES['default'].update(db_from_env)        
-            
+    db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
+    DATABASES['default'].update(db_from_env)        
+                
+    import django_heroku
+    django_heroku.settings(locals())
