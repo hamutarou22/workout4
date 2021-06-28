@@ -69,19 +69,16 @@ def neweventfunc2(request):
 
     if request.POST.get("add")=="1":
         event = request.POST.get("newevent")
-        object_list = Content.objects.filter(username = request.user.username)
+        name = request.user.username
+        object_list = Event.objects.filter(event_name = event , username = name)
 
-        if object_list.filter(event = event) == None:
-            b = Event(event = event, username = request.user.username)
+        if object_list.first() is None:
+            b = Event(event_name = event, username = request.user.username)
             b.save()
         else:
             object_list2 = Event.objects.filter(username = request.user.username)
             return render(request, 'new_event.html', {'object_list':object_list2, "inputerror":"入力された種目が重複しています。"})
 
-
-
-
-    
     if request.POST.get("delete")=="1":
        instance =  Event.objects.get(id=request.POST.get("delete_pk"))
        instance.delete()

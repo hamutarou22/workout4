@@ -10,12 +10,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+import environ
 
 from pathlib import Path
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR,'.env'))
+
+SECRET_KEY = env('SECRET_KEY')
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,10 +30,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+env = environ.Env(DEBUG=(bool,False))
+
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
+DATABASES = {
+    'default': env.db(),
+} 
 
 # Application definition
 
@@ -136,10 +147,7 @@ except ImportError:
     pass
 
 
-SECRET_KEY = os.environ['SECRET_KEY']
-
-if not DEBUG:
-    import dj_database_url
+if not DEBUG :
 
     DATABASES = {
                     'default': {
